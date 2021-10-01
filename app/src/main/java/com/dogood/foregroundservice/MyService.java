@@ -84,7 +84,7 @@ public class MyService extends Service {
         startForeground(1, notification);
         //do heavy work on a background thread
         //stopSelf();
-        PrimeThread p = new PrimeThread(143);
+        SimplePingThread p = new SimplePingThread(143);
         p.start();
 
         IntentFilter intentFilter = new IntentFilter(ACTION);
@@ -159,11 +159,11 @@ public class MyService extends Service {
         }
     }
 
-    class PrimeThread extends Thread {
+    class SimplePingThread extends Thread {
         private final long mMinWait;
 
-        PrimeThread(long minPrime) {
-            mMinWait = minPrime;
+        SimplePingThread(long minIntervalsInMil) {
+            mMinWait = minIntervalsInMil;
         }
 
         public void run() {
