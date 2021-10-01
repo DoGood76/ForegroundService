@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ForegroundService</string>
+    <string name="message_accessibility_service_details">message_accessibility_service_details</string>
+</resources>
