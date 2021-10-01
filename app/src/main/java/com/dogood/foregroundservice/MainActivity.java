@@ -1,22 +1,19 @@
 package com.dogood.foregroundservice;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
-import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ServiceInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.dogood.foregroundservice.databinding.ActivityMainBinding;
 
@@ -52,11 +49,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startService(View v) {
+        mLogger.debug("startService");
         MyService.startService(this, "Starting");
         setStartBtnVisibility(false);
     }
 
     public void stopService(View v) {
+        mLogger.debug("stopService");
         Intent serviceIntent = new Intent(this, MyService.class);
         mService.selfStop();
         stopService(serviceIntent);
