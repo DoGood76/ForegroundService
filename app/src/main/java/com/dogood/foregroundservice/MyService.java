@@ -1,5 +1,6 @@
 package com.dogood.foregroundservice;
 
+import static androidx.core.app.NotificationCompat.PRIORITY_MAX;
 import static com.dogood.foregroundservice.MyApp.CHANNEL_ID;
 
 import android.annotation.SuppressLint;
@@ -42,8 +43,6 @@ public class MyService extends Service {
     private final Logger mLogger;
     private static EventsHandler mEventsHandler;
 
-
-    public static final String SERVICE_INTENT_ACTION = "inputExtra";
     private KeyEventReceiver mKeyEventReceiver;
     private PowerManager.WakeLock mWakeLock;
     private HeadsetIntentReceiver mHeadsetIntentReceiver;
@@ -71,21 +70,19 @@ public class MyService extends Service {
     @SuppressLint("WakelockTimeout")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String input = intent.getStringExtra(SERVICE_INTENT_ACTION);
+        //String input = intent.getStringExtra(SERVICE_INTENT_ACTION);
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Example Service")
-                .setContentText(input)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setPriority(PRIORITY_MAX)
+                .setContentTitle(getString(R.string.notification_default_content_title))
+                .setContentText(getString(R.string.notification_default_content_text))
+                .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);
-        //do heavy work on a background thread
-        //stopSelf();
-        SimplePingThread p = new SimplePingThread(143);
-        p.start();
 
         IntentFilter intentFilter = new IntentFilter(ACTION);
         mKeyEventReceiver = new KeyEventReceiver();
@@ -96,7 +93,9 @@ public class MyService extends Service {
 
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "foregroundservice::MyService");
+        mWakeLock = powerManager.newWakeLock(
+                PowerManager.PARTIAL_WAKE_LOCK |
+                        PowerManager.FULL_WAKE_LOCK, "foregroundservice::MyService");
         mWakeLock.acquire();
         return START_STICKY;
     }
@@ -156,27 +155,6 @@ public class MyService extends Service {
         if (mKeyEventReceiver != null) {
             unregisterReceiver(mKeyEventReceiver);
             mKeyEventReceiver = null;
-        }
-    }
-
-    class SimplePingThread extends Thread {
-        private final long mMinWait;
-
-        SimplePingThread(long minIntervalsInMil) {
-            mMinWait = minIntervalsInMil;
-        }
-
-        public void run() {
-            // compute primes larger than minPrime
-            while (mIsRunning) {
-                try {
-                    Thread.sleep(mMinWait);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                mLogger.debug("Test");
-            }
-
         }
     }
 
