@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public void startService(View v) {
         mLogger.debug("startService");
         MyService.startService(this, "Starting");
+        MyAccessibilityService.startAccService(this, "");
         setStartBtnVisibility(false);
     }
 
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, MyService.class);
         mService.selfStop();
         stopService(serviceIntent);
+        Intent serviceAccIntent = new Intent(this, MyAccessibilityService.class);
+        stopService(serviceAccIntent);
         setStartBtnVisibility(true);
     }
 
