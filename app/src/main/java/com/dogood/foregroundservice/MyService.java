@@ -94,8 +94,7 @@ public class MyService extends Service {
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 
         mWakeLock = powerManager.newWakeLock(
-                PowerManager.PARTIAL_WAKE_LOCK |
-                        PowerManager.FULL_WAKE_LOCK, "foregroundservice::MyService");
+                PowerManager.FULL_WAKE_LOCK, "foregroundservice::MyService");
         mWakeLock.acquire();
         return START_STICKY;
     }
